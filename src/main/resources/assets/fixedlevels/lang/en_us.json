@@ -1,0 +1,6 @@
+{
+  "text.autoconfig.fixed-levels.title" : "Fixed Levels Options",
+  "text.autoconfig.fixed-levels.option.baseXPForOneLevel" : "Base experience for one level",
+  "text.autoconfig.fixed-levels.option.curveMode" : "Curve mode",
+  "text.autoconfig.fixed-levels.option.curveModeMultiplier" : "Curve mode multiplier"
+}

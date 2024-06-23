@@ -1,4 +1,4 @@
-package info.partonetrain.linearlevels;
+package com.neptunecentury.fixedlevels;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import net.fabricmc.api.EnvType;
