@@ -14,6 +14,9 @@ public class FixedLevels implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		// Register the config class and the serializer to use
 		AutoConfig.register(LevelConfig.class, JanksonConfigSerializer::new);
+		// Register commands
+		FixedLevelCommands.registerCommands("fixedlevels");
 	}
 }
