@@ -18,7 +18,7 @@ public class PlayerMixin {
 	@Inject(at = @At("HEAD"),
 			method = "Lnet/minecraft/entity/player/PlayerEntity;getNextLevelExperience()I",
 			cancellable = true)
-	private void linearlevels_getXpNeededForNextLevel(CallbackInfoReturnable<Integer> cir) {
+	private void mixinGetNextLevelExperience(CallbackInfoReturnable<Integer> cir) {
 		LevelConfig cfg = AutoConfig.getConfigHolder(LevelConfig.class).getConfig();
 		if(cfg.curveMode)
 		{
