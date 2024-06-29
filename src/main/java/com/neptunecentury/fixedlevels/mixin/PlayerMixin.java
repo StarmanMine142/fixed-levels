@@ -1,7 +1,6 @@
 package com.neptunecentury.fixedlevels.mixin;
+import com.neptunecentury.fixedlevels.FixedLevels;
 
-import com.neptunecentury.fixedlevels.LevelConfig;
-import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +18,7 @@ public class PlayerMixin {
 			method = "Lnet/minecraft/entity/player/PlayerEntity;getNextLevelExperience()I",
 			cancellable = true)
 	private void mixinGetNextLevelExperience(CallbackInfoReturnable<Integer> cir) {
-		LevelConfig cfg = AutoConfig.getConfigHolder(LevelConfig.class).getConfig();
+		var cfg = FixedLevels.getConfigManager().getConfig();
 		if(cfg.curveMode)
 		{
 			cir.setReturnValue(experienceLevel == 0 ? cfg.baseXPForOneLevel : cfg.baseXPForOneLevel + (experienceLevel * cfg.curveModeMultiplier));

@@ -9,20 +9,21 @@
 	],
 	"contact": {
 		"homepage": "https://github.com/neptunecentury/fixed-levels",
-		"sources": "https://github.com/neptunecentury/fixed-levels"
+		"sources": "https://github.com/neptunecentury/fixed-levels",
+		"issues": "https://github.com/neptunecentury/fixed-levels/issues"
 	},
 	"license": "MIT",
 	"icon": "assets/fixedlevels/logo.png",
 	"environment": "*",
 	"entrypoints": {
+		"client": [
+			"com.neptunecentury.fixedlevels.client.FixedLevelsClient"
+		],
 		"main": [
 			"com.neptunecentury.fixedlevels.FixedLevels"
 		],
-		"client": [
-			"com.neptunecentury.fixedlevels.FixedLevelsClient"
-		],
 		"modmenu": [
-			"com.neptunecentury.fixedlevels.ModMenuIntegration"
+			"com.neptunecentury.fixedlevels.client.ModMenuIntegration"
 		]
 	},
 	"mixins": [
@@ -32,12 +33,13 @@
 		"fabricloader": ">=${loader_version}",
 		"fabric": "*",
 		"minecraft": "${minecraft_version}",
-		"cloth-config": ">=${clothconfig_version}",
 		"java": ">=21"
 	},
 	"recommends": {
-		"modmenu": ">=11.0.1"
+
 	},
 	"suggests": {
+		"cloth-config": ">=${clothconfig_version}",
+		"modmenu": ">=11.0.1"
 	}
 }
