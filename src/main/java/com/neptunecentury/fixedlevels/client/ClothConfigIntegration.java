@@ -9,15 +9,29 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
+/**
+ * Integrates the cloth config api to create an options screen
+ */
 public class ClothConfigIntegration {
     // Gets the configuration object instance
-    private static final ConfigManager cfgManager = FixedLevels.getConfigManager();
+    private static final ConfigManager<LevelConfig> cfgManager = FixedLevels.getConfigManager();
     private static final LevelConfig cfg = cfgManager.getConfig();
 
+    /**
+     * Gets text from the localization file
+     * @param type A string representing the type of the text e.g. config
+     * @param id The id of the text to display
+     * @return The text from the built key using type and id
+     */
     public static MutableText localize(String type, String id) {
         return Text.translatable(type + "." + FixedLevels.MOD_ID + "." + id);
     }
 
+    /**
+     * Builds the cloth config screen for the options
+     * @param parent The parent screen to attach to
+     * @return The generated screen from cloth config
+     */
     public static Screen generateScreen(Screen parent) {
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)

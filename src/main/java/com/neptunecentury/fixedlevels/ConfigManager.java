@@ -10,10 +10,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class ConfigManager {
+/**
+ * Manages the configuration loading and saving
+ * @param <T> The type of the config class
+ */
+public class ConfigManager<T> {
     private final String _name;
     private final Logger _logger;
-    private LevelConfig _cfg;
+    private T _cfg;
 
     /**
      * Constructor
@@ -30,14 +34,15 @@ public class ConfigManager {
      *
      * @return An object containing the configuration
      */
-    public LevelConfig getConfig() {
+    public T getConfig() {
         return _cfg;
     }
 
     /**
      * Loads the configuration file
+     * @param clazz The class object for the class type to load
      */
-    public void load() {
+    public void load(Class<T> clazz) {
         // Create a new Jankson instance
         var jankson = Jankson.builder().build();
         // Parse the config file into a JSON Object
@@ -49,7 +54,7 @@ public class ConfigManager {
             JsonObject configJson = jankson.load(configFile);
 
             // Convert the raw object into your POJO type
-            LevelConfig config = jankson.fromJson(configJson, LevelConfig.class);
+            T config = jankson.fromJson(configJson, clazz);
 
             _logger.info("[{}] Loaded configuration", _name);
 
@@ -58,16 +63,16 @@ public class ConfigManager {
         } catch (FileNotFoundException e) {
             _logger.warn("[{}] Could not load config: {}: Using default values.", _name, e.getMessage());
             // Create defaults
-            LevelConfig config = new LevelConfig();
-            config.baseXPForOneLevel = 30;
-            config.curveMode = false;
-            config.curveModeMultiplier = 2;
+            try {
+                _cfg = clazz.getDeclaredConstructor().newInstance();
 
-            _cfg = config;
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
 
-        } catch (Exception e) {
-            _logger.error("[{}] Error loading config: {}", _name, e.getMessage());
-            throw new RuntimeException();
+        } catch (Exception ex) {
+            _logger.error("[{}] Error loading config: {}", _name, ex.getMessage());
+            throw new RuntimeException(ex);
 
         }
 

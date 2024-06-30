@@ -9,9 +9,13 @@ import net.minecraft.text.Text;
 
 public class FixedLevelCommands {
 
+    /**
+     * Registers the commands used by the mod
+     * @param commandName The root command name
+     */
     public static void registerCommands(String commandName) {
 
-        final ConfigManager _cfgManager = FixedLevels.getConfigManager();
+        final ConfigManager<LevelConfig> _cfgManager = FixedLevels.getConfigManager();
 
         // Register the command tree
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {

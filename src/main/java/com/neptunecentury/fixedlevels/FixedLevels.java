@@ -9,12 +9,12 @@ public class FixedLevels implements ModInitializer {
 	// Private fields
 	private static final Logger _logger = LoggerFactory.getLogger(MOD_ID);
 	// Create static instance of the config manager and load the config file.
-	private static final ConfigManager _cfgManager = new ConfigManager(MOD_ID, _logger);
+	private static final ConfigManager<LevelConfig> _cfgManager = new ConfigManager<LevelConfig>(MOD_ID, _logger);
 
 	@Override
 	public void onInitialize() {
 		// Load configuration
-		_cfgManager.load();
+		_cfgManager.load(LevelConfig.class);
 
 		// Register commands
 		FixedLevelCommands.registerCommands("fixedlevels");
@@ -25,7 +25,7 @@ public class FixedLevels implements ModInitializer {
 	 * Gets the instance of the config manager
 	 * @return An instance of the config manager
 	 */
-	public static ConfigManager getConfigManager(){
+	public static ConfigManager<LevelConfig> getConfigManager(){
 		return _cfgManager;
 	}
 
