@@ -1,9 +1,33 @@
 package com.neptunecentury.fixedlevels.client;
 
+import com.neptunecentury.fixedlevels.ConfigPayload;
+import com.neptunecentury.fixedlevels.FixedLevels;
+import com.neptunecentury.fixedlevels.LevelConfig;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.text.Text;
 
 public class FixedLevelsClient implements ClientModInitializer {
+
     @Override
     public void onInitializeClient() {
+
+        // Listen for config payload from server if client is connected to dedicated server.
+        ClientPlayNetworking.registerGlobalReceiver(ConfigPayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                // Set a global flag that we are using the server's config
+                var serverCfg = new LevelConfig();
+                serverCfg.curveMode = payload.curveMode();
+                serverCfg.baseXPForOneLevel = payload.baseXPForOneLevel();
+                serverCfg.curveModeMultiplier = payload.curveModeMultiplier();
+
+                // Use the server's config
+                FixedLevels.useServerConfig(serverCfg);
+                FixedLevels.enable(true);
+
+                context.player().sendMessage(Text.literal("[fixed-levels] Received configuration from server"));
+            });
+        });
     }
 }

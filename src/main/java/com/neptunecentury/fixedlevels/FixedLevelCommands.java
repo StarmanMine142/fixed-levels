@@ -3,6 +3,7 @@ package com.neptunecentury.fixedlevels;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 
@@ -10,7 +11,21 @@ import net.minecraft.text.Text;
 public class FixedLevelCommands {
 
     /**
+     * Dispatches the config changes to all connected players
+     *
+     * @param cfg The config settings to dispatch
+     */
+    private static void dispatchConfig(LevelConfig cfg) {
+        // Dispatch the config to the client if the server is not single player.
+        var server = FixedLevels.getServer();
+        if (server != null && !server.isSingleplayer()) {
+            ConfigDispatcher.dispatch(server, cfg);
+        }
+    }
+
+    /**
      * Registers the commands used by the mod
+     *
      * @param commandName The root command name
      */
     public static void registerCommands(String commandName) {
@@ -61,6 +76,7 @@ public class FixedLevelCommands {
                                                         cfg.baseXPForOneLevel = value;
                                                         // Update the config file
                                                         _cfgManager.save();
+                                                        dispatchConfig(cfg);
                                                         context.getSource().sendFeedback(() -> Text.literal("%s baseXPForOneLevel is now set to: %s".formatted(commandName, value)), true);
                                                         return 1;
                                                     }
@@ -78,6 +94,7 @@ public class FixedLevelCommands {
                                                         cfg.curveMode = value;
                                                         // Update the config file
                                                         _cfgManager.save();
+                                                        dispatchConfig(cfg);
                                                         context.getSource().sendFeedback(() -> Text.literal("%s curveMode is now set to: %s".formatted(commandName, value)), true);
                                                         return 1;
                                                     }
@@ -95,6 +112,7 @@ public class FixedLevelCommands {
                                                         cfg.curveModeMultiplier = value;
                                                         // Update the config file
                                                         _cfgManager.save();
+                                                        dispatchConfig(cfg);
                                                         context.getSource().sendFeedback(() -> Text.literal("%s curveModeMultiplier is now set to: %s".formatted(commandName, value)), true);
                                                         return 1;
                                                     }
