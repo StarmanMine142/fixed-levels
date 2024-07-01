@@ -1,7 +1,6 @@
 package com.neptunecentury.fixedlevels;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -11,16 +10,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class ConfigDispatcher {
 
     /**
-     * Creates a custom payload to send to the client
-     * @param cfg The configuration object to send
-     * @return The custom payload created for the configuration object
+     * Sends the config to the client
+     *
+     * @param server       The Minecraft server instance
+     * @param playerEntity The player entity to send to
+     * @param cfg          The IConfig configuration to send
      */
-    private static CustomPayload createPayload(LevelConfig cfg){
-        return new ConfigPayload(cfg.curveMode, cfg.baseXPForOneLevel, cfg.curveModeMultiplier);
-    }
-
-    public static void dispatch(MinecraftServer server, ServerPlayerEntity playerEntity, LevelConfig cfg){
-        var payload = createPayload(cfg);
+    public static void dispatch(MinecraftServer server, ServerPlayerEntity playerEntity, IConfig cfg) {
+        var payload = cfg.createPayload();
         // Send the config to a specific player
         server.execute(() -> {
             ServerPlayNetworking.send(playerEntity, payload);
@@ -28,11 +25,17 @@ public class ConfigDispatcher {
         });
     }
 
-    public static void dispatch(MinecraftServer server, LevelConfig cfg){
-        var payload = createPayload(cfg);
+    /**
+     * Sends the config to the client
+     *
+     * @param server The Minecraft server instance
+     * @param cfg    The IConfig configuration to send
+     */
+    public static void dispatch(MinecraftServer server, IConfig cfg) {
+        var payload = cfg.createPayload();
         // Get all player entities on the server
         var playerEntities = server.getPlayerManager().getPlayerList();
-        for(var playerEntity: playerEntities){
+        for (var playerEntity : playerEntities) {
             // For each player, send the config. The player may not have this mod installed
             // on their client, so in that case, the packet will get ignored.
             server.execute(() -> {

@@ -4,7 +4,6 @@ import com.neptunecentury.fixedlevels.ConfigPayload;
 import com.neptunecentury.fixedlevels.FixedLevels;
 import com.neptunecentury.fixedlevels.LevelConfig;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.text.Text;
 
@@ -24,9 +23,9 @@ public class FixedLevelsClient implements ClientModInitializer {
 
                 // Use the server's config
                 FixedLevels.useServerConfig(serverCfg);
-                FixedLevels.enable(true);
+                FixedLevels.setEnabled(true);
 
-                context.player().sendMessage(Text.literal("[fixed-levels] Received configuration from server"));
+                context.player().sendMessage(Text.literal("[%s] Using configuration from server".formatted(FixedLevels.MOD_ID)));
             });
         });
     }

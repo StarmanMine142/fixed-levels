@@ -12,6 +12,7 @@ import java.io.IOException;
 
 /**
  * Manages the configuration loading and saving
+ *
  * @param <T> The type of the config class
  */
 public class ConfigManager<T> {
@@ -40,6 +41,7 @@ public class ConfigManager<T> {
 
     /**
      * Loads the configuration file
+     *
      * @param clazz The class object for the class type to load
      */
     public void load(Class<T> clazz) {

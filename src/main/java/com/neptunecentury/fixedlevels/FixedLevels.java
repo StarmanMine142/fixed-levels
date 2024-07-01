@@ -1,39 +1,24 @@
 package com.neptunecentury.fixedlevels;
 
-import com.mojang.serialization.Codec;
-import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.gen.YOffset;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.logging.Level;
-
-
+/**
+ * This is the main entry point. Almost everything needed to manage the runtime is here
+ */
 public class FixedLevels implements ModInitializer {
-    public static final Identifier CONFIG_PACKET_ID = Identifier.of("fixed-levels", "config");
-    public static final Identifier CONFIG_SEND_CONFIG = Identifier.of("fixed-levels", "send-config");
     // Public fields
+    public static final Identifier CONFIG_PACKET_ID = Identifier.of("fixed-levels", "config");
     public static final String MOD_ID = "fixed-levels";
     // Private fields
-    public static final Logger _logger = LoggerFactory.getLogger(MOD_ID);
+    private static final Logger _logger = LoggerFactory.getLogger(MOD_ID);
     // Create static instance of the config manager and load the config file.
-    private static final ConfigManager<LevelConfig> _cfgManager = new ConfigManager<LevelConfig>(MOD_ID, _logger);
-
+    private static final ConfigManager<LevelConfig> _cfgManager = new ConfigManager<>(MOD_ID, _logger);
     // Store server-side config separately when client is connected to a dedicated server.
     private static LevelConfig _serverCfg = null;
     private static boolean _isEnabled = false;
@@ -55,22 +40,22 @@ public class FixedLevels implements ModInitializer {
         // Register event when player joins server
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             // Set the server instance
-            setServer(server);
+            _server = server;
 
             // Check if single player mode or if this is the dedicated server. If so, then the
             // mixin will be enabled here. Otherwise, the mixin will be enabled when it received
             // the config packet from the server (client side).
-            FixedLevels.enable(server.isSingleplayer() || server.isDedicated());
+            FixedLevels.setEnabled(server.isSingleplayer() || server.isDedicated());
             if (server.isSingleplayer()) {
                 // Single player mode uses its own config
-                _logger.info("[fixed-levels] Single player mode detected");
+                _logger.info("[{}] Single player mode detected", MOD_ID);
                 // Clear out the server config settings so that we use client config settings
                 FixedLevels.useServerConfig(null);
 
                 return;
             }
 
-            _logger.info("[fixed-levels] Client joined. Sending config to client.");
+            _logger.info("[{}] Client joined. Sending config to client.", MOD_ID);
 
             // Send a packet to the client
             var cfg = FixedLevels.getConfigManager().getConfig();
@@ -81,10 +66,14 @@ public class FixedLevels implements ModInitializer {
         });
 
         // Listen for when the client disconnects from the server
-        ServerPlayConnectionEvents.DISCONNECT.register((phase, listener) -> {
-            // Client is disconnected. Disable so that we can determine again later if it
-            // should be enabled.
-            FixedLevels.enable(false);
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            // If a single player client disconnects, disable the mixin because the client
+            // may join a server that does not have this mod installed. Although the mixin won't
+            // be used in that case, it will still throw off certain mods that track EXP per level
+            // because they will get that data from the client.
+            if (server.isSingleplayer()) {
+                FixedLevels.setEnabled(false);
+            }
         });
 
     }
@@ -98,27 +87,49 @@ public class FixedLevels implements ModInitializer {
         return _cfgManager;
     }
 
+    /**
+     * Gets the server-side config that was sent to client
+     *
+     * @return The server config
+     */
     public static LevelConfig getServerConfig() {
         return _serverCfg;
     }
 
-    public static void useServerConfig(LevelConfig cfg) {
-        _serverCfg = cfg;
+    /**
+     * Sets the server config to use that was received from the server
+     *
+     * @param serverCfg The server config
+     */
+    public static void useServerConfig(LevelConfig serverCfg) {
+        _serverCfg = serverCfg;
     }
 
+    /**
+     * Gets whether the mixin is enabled. If connected to a server that does not have this mod installed,
+     * the mixin will disable itself.
+     *
+     * @return Whether the mixin is enabled
+     */
     public static boolean isEnabled() {
         return _isEnabled;
     }
 
-    public static void enable(boolean value) {
+    /**
+     * Sets the enabled state of the mixin.
+     *
+     * @param value Whether the mixin is enabled
+     */
+    public static void setEnabled(boolean value) {
         _isEnabled = value;
         _logger.info("[fixed-levels] Client enabled the mixin.");
     }
 
-    public static void setServer(MinecraftServer server) {
-        _server = server;
-    }
-
+    /**
+     * Gets the instance of the server the client is connected to.
+     *
+     * @return The server instance
+     */
     public static MinecraftServer getServer() {
         return _server;
     }
