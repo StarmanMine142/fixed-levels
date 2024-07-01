@@ -19,10 +19,7 @@ public class ConfigDispatcher {
     public static void dispatch(MinecraftServer server, ServerPlayerEntity playerEntity, IConfig cfg) {
         var payload = cfg.createPayload();
         // Send the config to a specific player
-        server.execute(() -> {
-            ServerPlayNetworking.send(playerEntity, payload);
-
-        });
+        server.execute(() -> ServerPlayNetworking.send(playerEntity, payload));
     }
 
     /**
@@ -38,10 +35,7 @@ public class ConfigDispatcher {
         for (var playerEntity : playerEntities) {
             // For each player, send the config. The player may not have this mod installed
             // on their client, so in that case, the packet will get ignored.
-            server.execute(() -> {
-                ServerPlayNetworking.send(playerEntity, payload);
-
-            });
+            server.execute(() -> ServerPlayNetworking.send(playerEntity, payload));
         }
 
     }

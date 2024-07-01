@@ -13,20 +13,18 @@ public class FixedLevelsClient implements ClientModInitializer {
     public void onInitializeClient() {
 
         // Listen for config payload from server if client is connected to dedicated server.
-        ClientPlayNetworking.registerGlobalReceiver(ConfigPayload.ID, (payload, context) -> {
-            context.client().execute(() -> {
-                // Set a global flag that we are using the server's config
-                var serverCfg = new LevelConfig();
-                serverCfg.curveMode = payload.curveMode();
-                serverCfg.baseXPForOneLevel = payload.baseXPForOneLevel();
-                serverCfg.curveModeMultiplier = payload.curveModeMultiplier();
+        ClientPlayNetworking.registerGlobalReceiver(ConfigPayload.ID, (payload, context) -> context.client().execute(() -> {
+            // Set a global flag that we are using the server's config
+            var serverCfg = new LevelConfig();
+            serverCfg.curveMode = payload.curveMode();
+            serverCfg.baseXPForOneLevel = payload.baseXPForOneLevel();
+            serverCfg.curveModeMultiplier = payload.curveModeMultiplier();
 
-                // Use the server's config
-                FixedLevels.useServerConfig(serverCfg);
-                FixedLevels.setEnabled(true);
+            // Use the server's config
+            FixedLevels.useServerConfig(serverCfg);
+            FixedLevels.setEnabled(true);
 
-                context.player().sendMessage(Text.literal("[%s] Using configuration from server".formatted(FixedLevels.MOD_ID)));
-            });
-        });
+            context.player().sendMessage(Text.literal("[%s] Using configuration from server".formatted(FixedLevels.MOD_ID)));
+        }));
     }
 }
