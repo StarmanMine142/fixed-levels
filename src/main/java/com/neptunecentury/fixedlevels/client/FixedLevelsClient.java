@@ -6,7 +6,6 @@ import com.neptunecentury.fixedlevels.LevelConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.text.Text;
-import net.minecraft.world.gen.YOffset;
 
 public class FixedLevelsClient implements ClientModInitializer {
 
