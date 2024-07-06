@@ -135,4 +135,13 @@ public class FixedLevels implements ModInitializer {
         return _server;
     }
 
+    /**
+     * Gets the logger instance for the mod
+     *
+     * @return The logger instance
+     */
+    public static Logger getLogger() {
+        return _logger;
+    }
+
 }
