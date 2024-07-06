@@ -39,11 +39,12 @@ public class FixedLevels implements ModInitializer {
 
         // Register event when player joins server
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            // A player has joined the server.
             // Set the server instance
             _server = server;
 
-            // Check if single player mode or if this is the dedicated server. If so, then the
-            // mixin will be enabled here. Otherwise, the mixin will be enabled when it received
+            // Check if single player mode or if this is the dedicated server. If dedicated, then the
+            // mixin will be enabled here. Otherwise, the mixin will be enabled when it receives
             // the config packet from the server (client side).
             FixedLevels.setEnabled(server.isSingleplayer() || server.isDedicated());
             if (server.isSingleplayer()) {
@@ -122,7 +123,7 @@ public class FixedLevels implements ModInitializer {
      */
     public static void setEnabled(boolean value) {
         _isEnabled = value;
-        _logger.info("[fixed-levels] Client enabled the mixin.");
+        _logger.info("[{}] Mixin has been {}.", MOD_ID, value ? "enabled" : "disabled");
     }
 
     /**

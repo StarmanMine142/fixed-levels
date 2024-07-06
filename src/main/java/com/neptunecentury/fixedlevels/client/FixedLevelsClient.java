@@ -14,7 +14,7 @@ public class FixedLevelsClient implements ClientModInitializer {
 
         // Listen for config payload from server if client is connected to dedicated server.
         ClientPlayNetworking.registerGlobalReceiver(ConfigPayload.ID, (payload, context) -> context.client().execute(() -> {
-            // Set a global flag that we are using the server's config
+            // Get the values from the payload and put them in a new LevelConfig instance.
             var serverCfg = new LevelConfig();
             serverCfg.curveMode = payload.curveMode();
             serverCfg.baseXPForOneLevel = payload.baseXPForOneLevel();
