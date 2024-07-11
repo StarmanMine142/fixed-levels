@@ -1,7 +1,6 @@
 package com.neptunecentury.fixedlevels.mixin;
 
-import com.neptunecentury.fixedlevels.LevelConfig;
-import me.shedaniel.autoconfig.AutoConfig;
+import com.neptunecentury.fixedlevels.FixedLevels;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,16 +18,23 @@ public class PlayerMixin {
 			method = "Lnet/minecraft/entity/player/PlayerEntity;getNextLevelExperience()I",
 			cancellable = true)
 	private void mixinGetNextLevelExperience(CallbackInfoReturnable<Integer> cir) {
-		LevelConfig cfg = AutoConfig.getConfigHolder(LevelConfig.class).getConfig();
-		if(cfg.curveMode)
-		{
-			cir.setReturnValue(experienceLevel == 0 ? cfg.baseXPForOneLevel : cfg.baseXPForOneLevel + (experienceLevel * cfg.curveModeMultiplier));
-		}
-		else
-		{
-			cir.setReturnValue(cfg.baseXPForOneLevel);
-		}
+		// Check if the mixin is enabled
+		if (FixedLevels.isEnabled()) {
+			// Check if we got a config from the server. If so, we need to use it instead.
+			var cfg = FixedLevels.getServerConfig();
+			if (cfg == null) {
+				cfg = FixedLevels.getConfigManager().getConfig();
+			}
 
-		cir.cancel();
+			int expRequired;
+			if (cfg.curveMode) {
+				expRequired = experienceLevel == 0 ? cfg.baseXPForOneLevel : cfg.baseXPForOneLevel + (experienceLevel * cfg.curveModeMultiplier);
+			} else {
+				expRequired = cfg.baseXPForOneLevel;
+			}
+
+			cir.setReturnValue(expRequired);
+			cir.cancel();
+		}
 	}
 }
