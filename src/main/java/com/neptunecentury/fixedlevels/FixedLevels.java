@@ -66,17 +66,6 @@ public class FixedLevels implements ModInitializer {
 
         });
 
-        // Listen for when the client disconnects from the server
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-            // If a single player client disconnects, disable the mixin because the client
-            // may join a server that does not have this mod installed. Although the mixin won't
-            // be used in that case, it will still throw off certain mods that track EXP per level
-            // because they will get that data from the client.
-            if (server.isSingleplayer()) {
-                FixedLevels.setEnabled(false);
-            }
-        });
-
     }
 
     /**
