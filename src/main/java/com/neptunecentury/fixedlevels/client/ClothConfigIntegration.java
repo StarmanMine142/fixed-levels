@@ -43,6 +43,18 @@ public class ClothConfigIntegration {
         builder.getOrCreateCategory(localize("config", "category.general"))
                 .addEntry(entryBuilder
                         .startBooleanToggle(
+                                localize("config", "option.enabled"),
+                                cfg.enabled
+                        )
+                        .setSaveConsumer(value -> {
+                            cfg.enabled = value;
+                            // Enable the mixin
+                            FixedLevels.initialize(FixedLevels.getServer(), null);
+                        })
+                        .build()
+                )
+                .addEntry(entryBuilder
+                        .startBooleanToggle(
                                 localize("config", "option.curveMode"),
                                 cfg.curveMode
                         )

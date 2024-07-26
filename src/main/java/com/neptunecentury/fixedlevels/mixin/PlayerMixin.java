@@ -11,30 +11,33 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PlayerEntity.class)
 public class PlayerMixin {
 
-	@Shadow
-	public int experienceLevel;
+    @Shadow
+    public int experienceLevel;
 
-	@Inject(at = @At("HEAD"),
-			method = "Lnet/minecraft/entity/player/PlayerEntity;getNextLevelExperience()I",
-			cancellable = true)
-	private void mixinGetNextLevelExperience(CallbackInfoReturnable<Integer> cir) {
-		// Check if the mixin is enabled
-		if (FixedLevels.isEnabled()) {
-			// Check if we got a config from the server. If so, we need to use it instead.
-			var cfg = FixedLevels.getServerConfig();
-			if (cfg == null) {
-				cfg = FixedLevels.getConfigManager().getConfig();
-			}
+    @Inject(at = @At("HEAD"),
+            method = "Lnet/minecraft/entity/player/PlayerEntity;getNextLevelExperience()I",
+            cancellable = true)
+    private void mixinGetNextLevelExperience(CallbackInfoReturnable<Integer> cir) {
+        // Check if the mixin has been enabled by the server
+        if (!FixedLevels.isEnabled()) {
+            return;
+        }
 
-			int expRequired;
-			if (cfg.curveMode) {
-				expRequired = experienceLevel == 0 ? cfg.baseXPForOneLevel : cfg.baseXPForOneLevel + (experienceLevel * cfg.curveModeMultiplier);
-			} else {
-				expRequired = cfg.baseXPForOneLevel;
-			}
+        // Check if we got a config from the server. If so, we need to use it instead.
+        var cfg = FixedLevels.getServerConfig();
+        if (cfg == null) {
+            cfg = FixedLevels.getConfigManager().getConfig();
+        }
 
-			cir.setReturnValue(expRequired);
-			cir.cancel();
-		}
-	}
+        int expRequired;
+        if (cfg.curveMode) {
+            expRequired = experienceLevel == 0 ? cfg.baseXPForOneLevel : cfg.baseXPForOneLevel + (experienceLevel * cfg.curveModeMultiplier);
+        } else {
+            expRequired = cfg.baseXPForOneLevel;
+        }
+
+        cir.setReturnValue(expRequired);
+        cir.cancel();
+
+    }
 }

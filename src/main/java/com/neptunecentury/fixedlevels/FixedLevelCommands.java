@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 
-
 public class FixedLevelCommands {
 
     /**
@@ -35,6 +34,15 @@ public class FixedLevelCommands {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(CommandManager.literal(commandName)
                     .then(CommandManager.literal("query")
+                            .then(CommandManager.literal("enabled")
+                                    .executes(context -> {
+                                                var cfg = _cfgManager.getConfig();
+
+                                                context.getSource().sendFeedback(() -> Text.literal("%s enabled is currently set to: %s".formatted(commandName, cfg.enabled)), false);
+                                                return 1;
+                                            }
+                                    )
+                            )
                             .then(CommandManager.literal("baseXPForOneLevel")
                                     .executes(context -> {
                                                 var cfg = _cfgManager.getConfig();
@@ -65,6 +73,24 @@ public class FixedLevelCommands {
                     )
                     .then(CommandManager.literal("set")
                             .requires(source -> source.hasPermissionLevel(4))
+                            .then(CommandManager.literal("enabled")
+                                    .then(CommandManager.argument("value", BoolArgumentType.bool())
+                                            .executes(context -> {
+                                                        var cfg = _cfgManager.getConfig();
+                                                        // Get new value from command arg
+                                                        final boolean value = BoolArgumentType.getBool(context, "value");
+                                                        // Set new value
+                                                        cfg.enabled = value;
+                                                        // Update the config file
+                                                        _cfgManager.save();
+                                                        FixedLevels.initialize(FixedLevels.getServer(), null);
+                                                        context.getSource().sendFeedback(() -> Text.literal("%s enabled is now set to: %s".formatted(commandName, value)), true);
+                                                        return 1;
+                                                    }
+                                            )
+
+                                    )
+                            )
                             .then(CommandManager.literal("baseXPForOneLevel")
                                     .then(CommandManager.argument("value", IntegerArgumentType.integer())
                                             .executes(context -> {

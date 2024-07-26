@@ -7,6 +7,8 @@ import net.minecraft.network.packet.CustomPayload;
  * The configuration class that stores the options for the mod that can be persisted
  */
 public class LevelConfig implements IConfig {
+    @Comment("Enables or disables the mod.")
+    public boolean enabled = true;
     @Comment("Curve mode calculation is XPToNextLevel = (baseXPForOneLevel + (experienceLevel * curveModeMultiplier)).")
     public boolean curveMode = false;
     @Comment("The amount of experience to go from level 0 to level 1. If curve mode is off, this amount is for every level.")
