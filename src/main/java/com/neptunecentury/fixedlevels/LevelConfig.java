@@ -32,7 +32,7 @@ public class LevelConfig implements IConfig {
      * @return The custom payload created for the configuration object
      */
     public CustomPayload createPayload() {
-        return new ConfigPayload(curveMode, baseXPForOneLevel, curveModeMultiplier, useExpCap, maxExpForNextLevel);
+        return new ConfigPayload(useCustomExpLevels, curveMode, baseXPForOneLevel, curveModeMultiplier, useExpCap, maxExpForNextLevel);
     }
 
 }

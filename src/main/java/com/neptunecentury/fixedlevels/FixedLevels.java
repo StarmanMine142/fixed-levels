@@ -108,7 +108,7 @@ public class FixedLevels implements ModInitializer {
     }
 
     /**
-     * Sets the server config to use that was received from the server
+     * Sets the server config to use  was received from the server
      *
      * @param serverCfg The server config
      */

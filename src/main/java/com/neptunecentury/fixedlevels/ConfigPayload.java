@@ -12,10 +12,11 @@ import net.minecraft.network.packet.CustomPayload;
  * @param baseXPForOneLevel
  * @param curveModeMultiplier
  */
-public record ConfigPayload(boolean curveMode, int baseXPForOneLevel,
+public record ConfigPayload(boolean useCustomExpLevels, boolean curveMode, int baseXPForOneLevel,
                             int curveModeMultiplier, boolean useExpCap, int maxExpForNextLevel) implements CustomPayload {
     public static final CustomPayload.Id<ConfigPayload> ID = new CustomPayload.Id<>(FixedLevels.CONFIG_PACKET_ID);
     public static final PacketCodec<RegistryByteBuf, ConfigPayload> CODEC = PacketCodec.tuple(
+            PacketCodecs.BOOL, ConfigPayload::useCustomExpLevels,
             PacketCodecs.BOOL, ConfigPayload::curveMode,
             PacketCodecs.INTEGER, ConfigPayload::baseXPForOneLevel,
             PacketCodecs.INTEGER, ConfigPayload::curveModeMultiplier,

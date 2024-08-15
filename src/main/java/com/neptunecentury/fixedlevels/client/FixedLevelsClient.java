@@ -18,6 +18,7 @@ public class FixedLevelsClient implements ClientModInitializer {
             context.client().execute(() -> {
                 // Get the values from the payload and put them in a new LevelConfig instance.
                 var serverCfg = new LevelConfig();
+                serverCfg.useCustomExpLevels = payload.useCustomExpLevels();
                 serverCfg.curveMode = payload.curveMode();
                 serverCfg.baseXPForOneLevel = payload.baseXPForOneLevel();
                 serverCfg.curveModeMultiplier = payload.curveModeMultiplier();
@@ -26,7 +27,8 @@ public class FixedLevelsClient implements ClientModInitializer {
 
                 // Use the server's config
                 FixedLevels.useServerConfig(serverCfg);
-                FixedLevels.setEnabled(true);
+                // Enable or disable based on server settings
+                FixedLevels.setEnabled(serverCfg.useCustomExpLevels);
 
                 context.player().sendMessage(Text.literal("[%s] Using configuration from server".formatted(FixedLevels.MOD_ID)));
 

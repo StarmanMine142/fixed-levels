@@ -6,7 +6,7 @@
   "config.fixed-levels.option.baseXPForOneLevelTooltip" : "The amount of exp to go from level 0 to level 1. If curve mode is off, this amount is for every level.",
   "config.fixed-levels.option.curveMode" : "Custom curve mode",
   "config.fixed-levels.option.curveModeTooltip":"Curve mode calculation is XPToNextLevel = (baseXPForOneLevel + (experienceLevel * curveModeMultiplier)).",
-  "config.fixed-levels.option.curveModeMultiplier" : "Curve mode multiplier",
+  "config.fixed-levels.option.curveModeMultiplier" : "Custom curve mode multiplier",
   "config.fixed-levels.option.curveModeMultiplierTooltip" : "The multiplier used in the curve mode calculation.",
   "config.fixed-levels.option.useExpCap" : "Use exp cap",
   "config.fixed-levels.option.useExpCapTooltip" : "When enabled, limits the amount of exp needed for the next level for vanilla and custom curve mode.",
