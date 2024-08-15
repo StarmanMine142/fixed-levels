@@ -13,12 +13,14 @@ import net.minecraft.network.packet.CustomPayload;
  * @param curveModeMultiplier
  */
 public record ConfigPayload(boolean curveMode, int baseXPForOneLevel,
-                            int curveModeMultiplier) implements CustomPayload {
+                            int curveModeMultiplier, boolean useExpCap, int maxExpForNextLevel) implements CustomPayload {
     public static final CustomPayload.Id<ConfigPayload> ID = new CustomPayload.Id<>(FixedLevels.CONFIG_PACKET_ID);
     public static final PacketCodec<RegistryByteBuf, ConfigPayload> CODEC = PacketCodec.tuple(
             PacketCodecs.BOOL, ConfigPayload::curveMode,
             PacketCodecs.INTEGER, ConfigPayload::baseXPForOneLevel,
             PacketCodecs.INTEGER, ConfigPayload::curveModeMultiplier,
+            PacketCodecs.BOOL, ConfigPayload::useExpCap,
+            PacketCodecs.INTEGER, ConfigPayload::maxExpForNextLevel,
             ConfigPayload::new
     );
 

@@ -65,7 +65,7 @@ public class FixedLevels implements ModInitializer {
         var cfg = FixedLevels.getConfigManager().getConfig();
 
         // Set the enabled flag to true if this is single player or dedicated server and if the mod is enabled
-        FixedLevels.setEnabled(cfg.enabled && (server.isSingleplayer() || server.isDedicated()));
+        FixedLevels.setEnabled(cfg.useCustomExpLevels && (server.isSingleplayer() || server.isDedicated()));
 
         // Check if single player mode or if this is the dedicated server. If dedicated, then the
         // mixin will be enabled here. Otherwise, the mixin will be enabled when it receives

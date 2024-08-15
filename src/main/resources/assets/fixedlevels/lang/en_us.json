@@ -1,7 +1,15 @@
 {
   "config.fixed-levels.title": "Fixed Levels Configuration",
-  "config.fixed-levels.option.enabled" : "Mod is enabled",
-  "config.fixed-levels.option.baseXPForOneLevel" : "Base experience for one level",
-  "config.fixed-levels.option.curveMode" : "Curve mode",
-  "config.fixed-levels.option.curveModeMultiplier" : "Curve mode multiplier"
+  "config.fixed-levels.option.useCustomExpLevels" : "Use custom exp levels",
+  "config.fixed-levels.option.useCustomExpLevelsTooltip" : "Enables custom exp levels. Disable to use vanilla calculations.",
+  "config.fixed-levels.option.baseXPForOneLevel" : "Custom exp for one level",
+  "config.fixed-levels.option.baseXPForOneLevelTooltip" : "The amount of exp to go from level 0 to level 1. If curve mode is off, this amount is for every level.",
+  "config.fixed-levels.option.curveMode" : "Custom curve mode",
+  "config.fixed-levels.option.curveModeTooltip":"Curve mode calculation is XPToNextLevel = (baseXPForOneLevel + (experienceLevel * curveModeMultiplier)).",
+  "config.fixed-levels.option.curveModeMultiplier" : "Curve mode multiplier",
+  "config.fixed-levels.option.curveModeMultiplierTooltip" : "The multiplier used in the curve mode calculation.",
+  "config.fixed-levels.option.useExpCap" : "Use exp cap",
+  "config.fixed-levels.option.useExpCapTooltip" : "When enabled, limits the amount of exp needed for the next level for vanilla and custom curve mode.",
+  "config.fixed-levels.option.maxExpForNextLevel" : "Max exp required",
+  "config.fixed-levels.option.maxExpForNextLevelTooltip" : "This sets the max amount of exp needed for the next level if using vanilla or custom curve mode."
 }

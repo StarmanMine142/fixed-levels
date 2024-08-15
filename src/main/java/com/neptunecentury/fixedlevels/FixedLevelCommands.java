@@ -34,11 +34,11 @@ public class FixedLevelCommands {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(CommandManager.literal(commandName)
                     .then(CommandManager.literal("query")
-                            .then(CommandManager.literal("enabled")
+                            .then(CommandManager.literal("useCustomExpLevels")
                                     .executes(context -> {
                                                 var cfg = _cfgManager.getConfig();
 
-                                                context.getSource().sendFeedback(() -> Text.literal("%s enabled is currently set to: %s".formatted(commandName, cfg.enabled)), false);
+                                                context.getSource().sendFeedback(() -> Text.literal("%s useCustomExpLevels is currently set to: %s".formatted(commandName, cfg.useCustomExpLevels)), false);
                                                 return 1;
                                             }
                                     )
@@ -70,21 +70,39 @@ public class FixedLevelCommands {
                                             }
                                     )
                             )
+                            .then(CommandManager.literal("useExpCap")
+                                    .executes(context -> {
+                                                var cfg = _cfgManager.getConfig();
+
+                                                context.getSource().sendFeedback(() -> Text.literal("%s useExpCap is currently set to: %s".formatted(commandName, cfg.useExpCap)), false);
+                                                return 1;
+                                            }
+                                    )
+                            )
+                            .then(CommandManager.literal("maxExpForNextLevel")
+                                    .executes(context -> {
+                                                var cfg = _cfgManager.getConfig();
+
+                                                context.getSource().sendFeedback(() -> Text.literal("%s maxExpForNextLevel is currently set to: %s".formatted(commandName, cfg.maxExpForNextLevel)), false);
+                                                return 1;
+                                            }
+                                    )
+                            )
                     )
                     .then(CommandManager.literal("set")
                             .requires(source -> source.hasPermissionLevel(4))
-                            .then(CommandManager.literal("enabled")
+                            .then(CommandManager.literal("useCustomExpLevels")
                                     .then(CommandManager.argument("value", BoolArgumentType.bool())
                                             .executes(context -> {
                                                         var cfg = _cfgManager.getConfig();
                                                         // Get new value from command arg
                                                         final boolean value = BoolArgumentType.getBool(context, "value");
                                                         // Set new value
-                                                        cfg.enabled = value;
+                                                        cfg.useCustomExpLevels = value;
                                                         // Update the config file
                                                         _cfgManager.save();
                                                         FixedLevels.initialize(FixedLevels.getServer(), null);
-                                                        context.getSource().sendFeedback(() -> Text.literal("%s enabled is now set to: %s".formatted(commandName, value)), true);
+                                                        context.getSource().sendFeedback(() -> Text.literal("%s useCustomExpLevels is now set to: %s".formatted(commandName, value)), true);
                                                         return 1;
                                                     }
                                             )
@@ -139,6 +157,42 @@ public class FixedLevelCommands {
                                                         _cfgManager.save();
                                                         dispatchConfig(cfg);
                                                         context.getSource().sendFeedback(() -> Text.literal("%s curveModeMultiplier is now set to: %s".formatted(commandName, value)), true);
+                                                        return 1;
+                                                    }
+                                            )
+
+                                    )
+                            )
+                            .then(CommandManager.literal("useExpCap")
+                                    .then(CommandManager.argument("value", BoolArgumentType.bool())
+                                            .executes(context -> {
+                                                        var cfg = _cfgManager.getConfig();
+                                                        // Get new value from command arg
+                                                        final boolean value = BoolArgumentType.getBool(context, "value");
+                                                        // Set new value
+                                                        cfg.useExpCap = value;
+                                                        // Update the config file
+                                                        _cfgManager.save();
+                                                        dispatchConfig(cfg);
+                                                        context.getSource().sendFeedback(() -> Text.literal("%s useExpCap is now set to: %s".formatted(commandName, value)), true);
+                                                        return 1;
+                                                    }
+                                            )
+
+                                    )
+                            )
+                            .then(CommandManager.literal("maxExpForNextLevel")
+                                    .then(CommandManager.argument("value", IntegerArgumentType.integer())
+                                            .executes(context -> {
+                                                        var cfg = _cfgManager.getConfig();
+                                                        // Get new value from command arg
+                                                        final int value = IntegerArgumentType.getInteger(context, "value");
+                                                        // Set new value
+                                                        cfg.maxExpForNextLevel = value;
+                                                        // Update the config file
+                                                        _cfgManager.save();
+                                                        dispatchConfig(cfg);
+                                                        context.getSource().sendFeedback(() -> Text.literal("%s maxExpForNextLevel is now set to: %s".formatted(commandName, value)), true);
                                                         return 1;
                                                     }
                                             )

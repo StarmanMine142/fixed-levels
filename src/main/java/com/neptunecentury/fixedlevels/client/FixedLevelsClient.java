@@ -21,6 +21,8 @@ public class FixedLevelsClient implements ClientModInitializer {
                 serverCfg.curveMode = payload.curveMode();
                 serverCfg.baseXPForOneLevel = payload.baseXPForOneLevel();
                 serverCfg.curveModeMultiplier = payload.curveModeMultiplier();
+                serverCfg.useExpCap = payload.useExpCap();
+                serverCfg.maxExpForNextLevel = payload.maxExpForNextLevel();
 
                 // Use the server's config
                 FixedLevels.useServerConfig(serverCfg);
