@@ -67,8 +67,11 @@ public class ConfigManager<T> {
             // Create defaults
             try {
                 _cfg = clazz.getDeclaredConstructor().newInstance();
+                // Save file
+                save();
 
             } catch (Exception ex) {
+                _logger.error("[{}] Error creating config: {}", _name, ex.getMessage());
                 throw new RuntimeException(ex);
             }
 
