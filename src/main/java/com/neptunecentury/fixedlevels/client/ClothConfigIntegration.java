@@ -5,7 +5,6 @@ import com.neptunecentury.fixedlevels.ConfigManager;
 import com.neptunecentury.fixedlevels.LevelConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.api.Requirement;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
