@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,29 +44,49 @@ public class FixedLevels implements ModInitializer {
             // Set the server instance
             _server = server;
 
-            // Check if single player mode or if this is the dedicated server. If dedicated, then the
-            // mixin will be enabled here. Otherwise, the mixin will be enabled when it receives
-            // the config packet from the server (client side).
-            FixedLevels.setEnabled(server.isSingleplayer() || server.isDedicated());
-            if (server.isSingleplayer()) {
-                // Single player mode uses its own config
-                _logger.info("[{}] Single player mode detected", MOD_ID);
-                // Clear out the server config settings so that we use client config settings
-                FixedLevels.useServerConfig(null);
-
-                return;
-            }
-
-            _logger.info("[{}] Client joined. Sending config to client.", MOD_ID);
-
-            // Send a packet to the client
-            var cfg = FixedLevels.getConfigManager().getConfig();
-
-            // Dispatch the config to the client
-            ConfigDispatcher.dispatch(server, handler.player, cfg);
+            // Initialize the mod
+            initialize(server, handler.player);
 
         });
 
+    }
+
+    /**
+     * Sends the server config to the client or enables the client if single player mode
+     * @param server The server instance
+     * @param player The player. Null if the server should send config to all player
+     */
+    public static void initialize(MinecraftServer server, ServerPlayerEntity player){
+        if (server == null){
+            return;
+        }
+
+        // Get the currently loaded config
+        var cfg = FixedLevels.getConfigManager().getConfig();
+
+        // Set the enabled flag to true if this is single player or dedicated server and if the mod is enabled
+        FixedLevels.setEnabled(cfg.useCustomExpLevels && (server.isSingleplayer() || server.isDedicated()));
+
+        // Check if single player mode or if this is the dedicated server. If dedicated, then the
+        // mixin will be enabled here. Otherwise, the mixin will be enabled when it receives
+        // the config packet from the server.
+        if (server.isSingleplayer()) {
+            // Single player mode uses its own config
+            _logger.info("[{}] Single player mode detected", MOD_ID);
+            // Clear out the server config settings so that we use client config settings
+            FixedLevels.useServerConfig(null);
+
+            return;
+        }
+
+        _logger.info("[{}] Sending config to clients.", MOD_ID);
+
+        // Dispatch the config to the client
+        if (player != null) {
+            ConfigDispatcher.dispatch(server, player, cfg);
+        } else {
+            ConfigDispatcher.dispatch(server, cfg);
+        }
     }
 
     /**
@@ -87,7 +108,7 @@ public class FixedLevels implements ModInitializer {
     }
 
     /**
-     * Sets the server config to use that was received from the server
+     * Sets the server config to use  was received from the server
      *
      * @param serverCfg The server config
      */
