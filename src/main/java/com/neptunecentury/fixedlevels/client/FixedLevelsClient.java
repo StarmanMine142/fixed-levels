@@ -6,7 +6,6 @@ import com.neptunecentury.fixedlevels.LevelConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.text.Text;
 
 public class FixedLevelsClient implements ClientModInitializer {
 
@@ -29,8 +28,6 @@ public class FixedLevelsClient implements ClientModInitializer {
                 FixedLevels.useServerConfig(serverCfg);
                 // Enable or disable based on server settings
                 FixedLevels.setEnabled(serverCfg.useCustomExpLevels);
-
-                context.player().sendMessage(Text.literal("[%s] Using configuration from server".formatted(FixedLevels.MOD_ID)));
 
             });
         });
