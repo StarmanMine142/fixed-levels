@@ -1,0 +1,16 @@
+{
+  "modmenu.descriptionTranslation.fixed-levels": "Додає налаштування для рівнів досвіду",
+  "config.fixed-levels.title": "Налаштування Fixed Levels",
+  "config.fixed-levels.option.useCustomExpLevels": "Використовувати власну кількість досвіду для рівню",
+  "config.fixed-levels.option.useCustomExpLevelsTooltip": "Вмикає власну кількість досвіду для рівню. Вимикає ванілльний розрахунок",
+  "config.fixed-levels.option.baseXPForOneLevel": "Власна кількість досвіду для одного рівня",
+  "config.fixed-levels.option.baseXPForOneLevelTooltip": "Встановолює кількість необхідного досвіду для переходу з 0 на 1 рівень\nЯкщо вимкнено режим кривої то застосовується до всіх рівнів",
+  "config.fixed-levels.option.curveMode": "Власний режим кривої",
+  "config.fixed-levels.option.curveModeTooltip":"Режим кривої при розрахунку XPToNextLevel = (baseXPForOneLevel + (experienceLevel * curveModeMultiplier))",
+  "config.fixed-levels.option.curveModeMultiplier": "Власний множник для кривої",
+  "config.fixed-levels.option.curveModeMultiplierTooltip": "Множник, який використовується при розрахуванні в режимі кривої",
+  "config.fixed-levels.option.useExpCap": "Досвіду до наступного рівню",
+  "config.fixed-levels.option.useExpCapTooltip": "Коли увімкнено, обмежує кількість досвіду, необхідного для наступного рівня для ванілльного режиму і власної кривої",
+  "config.fixed-levels.option.maxExpForNextLevel": "Максимальний необхідний рівень",
+  "config.fixed-levels.option.maxExpForNextLevelTooltip": "Встановлює максимальну кількість досвіду, необхідного для наступного рівня, якщо використовується ванілльний режим або власної кривої"
+}
